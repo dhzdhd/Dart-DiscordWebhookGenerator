@@ -56,7 +56,7 @@ void prepareSendWebhook() {
   Map data = jsonDecode(jsonFile.readAsStringSync());
   Map dataChannels = data['webhooks'];
 
-  print("List of webhook ID's: ");
+  print("\nList of webhook ID's: ");
   for (var obj in dataChannels.keys) {
     print(obj);
   }
@@ -68,20 +68,13 @@ void prepareSendWebhook() {
   webhookToken = dataChannels[choice.toString()];
 
   while (true) {
-    print('Enter type of animal: ');
+    print('\nEnter type of animal (or exit): ');
     animal = stdin.readLineSync();
 
-    switch (animal) {
-      case 'cat':
-        {
-          waitFor(Webhook.createWebhook(webhookId, webhookToken, animal));
-          break;
-        }
-      default:
-        {
-          print('Enter dog or cat!');
-          break;
-        }
+    if (animal.toLowerCase() == 'dog' || animal.toLowerCase() == 'cat') {
+      waitFor(Webhook.createWebhook(webhookId, webhookToken, animal));
+    } else {
+      break;
     }
   }
 }
@@ -92,8 +85,13 @@ void main() {
   mainLoop:
   while (true) {
     print(
-        '\nEnter your choice:\n1) Store webhook\n2) Choose and send a webhook');
-    choice = int.parse(stdin.readLineSync());
+        '\nEnter your choice:\n1) Store webhook\n2) Choose and send a webhook\n3) Exit');
+    try {
+      choice = int.parse(stdin.readLineSync());
+    } catch (e) {
+      print(';-;');
+      continue;
+    }
 
     switch (choice) {
       case 1:

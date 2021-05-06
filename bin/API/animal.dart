@@ -1,38 +1,36 @@
 import 'package:http/http.dart' as http;
 import 'dart:math';
+import 'dart:convert' as convert;
 
 Random _random;
 
 class CatApi {
-  static Future<String> sendCatPic() async {
+  static Future<String> sendPic() async {
     Uri url;
     String outputMode;
 
     _random = Random();
     outputMode = ['cat', 'cat/gif'][_random.nextInt(2)];
 
-    url = Uri.parse('https://cataas.com/$outputMode');
-
-    var response = await http.get(url);
-    print(response.body);
-
-    return 'e';
+    return 'https://cataas.com/$outputMode';
   }
 }
 
-// class DogApi {
-//   Future<String> sendDogPic(request) async {
-//     Uri url;
-//     String outputMode;
+class DogApi {
+  static Future<String> sendPic() async {
+    Uri url;
+    String result;
 
-//     _random = Random();
-//     outputMode = ['cat', 'cat/gif'][_random.nextInt(2)];
+    url = Uri.parse('https://dog.ceo/api/breeds/image/random');
 
-//     url = Uri.parse('https://cataas.com/$outputMode');
+    var response = await http.get(url);
 
-//     var response = await http.get(url);
-//     print(response.body);
+    if (response.body.isNotEmpty) {
+      var jsonResponse =
+          convert.jsonDecode(response.body) as Map<String, dynamic>;
+      result = jsonResponse['message'];
+    }
 
-//     return 'e';
-//   }
-// }
+    return result;
+  }
+}

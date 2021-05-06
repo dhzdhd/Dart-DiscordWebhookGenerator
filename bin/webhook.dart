@@ -1,5 +1,4 @@
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'API/animal.dart';
 
 String baseUrl = 'https://discord.com/api';
@@ -13,15 +12,23 @@ class Webhook {
     switch (choice) {
       case 'cat':
         {
-          content = CatApi.sendCatPic();
+          content = await CatApi.sendPic();
           break;
+        }
+      case 'dog':
+        {
+          content = await DogApi.sendPic();
+          break;
+        }
+      default:
+        {
+          return;
         }
     }
 
     uri = Uri.parse('$baseUrl/webhooks/$webhookId/$webhookToken');
+    await http.post(uri, body: {'content': content});
 
-    var response = await http.post(uri, body: {'content': content});
-    print(response.statusCode);
-    print(response.body);
+    print('\nSuccess!\n');
   }
 }
